@@ -7,7 +7,6 @@ import styled from 'styled-components';
 
 const emailRegex = /^[\w\._]+@[a-z]+\.[a-z]{2,}$/;
 
-// Описываем схему проверки для формы:
 const registrationFormScheme = yup
   .object()
   .required()
@@ -27,12 +26,11 @@ const registrationFormScheme = yup
     repeatPassword: yup
       .string()
       .oneOf([yup.ref("password")], 'Не совпадает с полем "password"'),
-  });
+  }
+);
 
 export function FormComponent() {
-    const submitButtonRef = useRef();
-
-  // Получаем объект работы с полем, проверки формы, получения ошибок формы:
+  const submitButtonRef = useRef();
   const form = useForm({
     mode: 'onTouched',
     defaultValues: {
@@ -40,33 +38,39 @@ export function FormComponent() {
       password: "",
       repeatPassword: "",
     },
-    // Говорим, что используем yup-схему
     resolver: yupResolver(registrationFormScheme),
   });
 
-  const {register, handleSubmit, formState: { errors }, setFocus} = form;
+  const { register, handleSubmit, formState: { errors, isValid } } = form;
+
+  // Тут фокусируемся на кнопке Отправить, если в форме нет ошибок
+  // if (isValid) {
+  //   submitButtonRef.current.focus();
+  // }
+
   const onSubmit = (data) => {
-    console.log(form)
-    console.log("submit", data)
+    const {email, password} = data
+    console.log("submit", {email, password})
 };
-
-
 
   return (
       <Form {...form} onSubmit={handleSubmit(onSubmit)}>
         <FormInputComponent
           register={register("email")}
           placeholder="E-mail"
+          type='email'
           errorMessage={errors.email?.message}
         />
         <FormInputComponent
           register={register("password")}
           placeholder="Password"
+          type='password'
           errorMessage={errors.password?.message}
         />
         <FormInputComponent
           register={register("repeatPassword")}
           placeholder="Repeat password"
+          type='password'
           errorMessage={errors.repeatPassword?.message}
         />
         <SubmitButton 
@@ -101,6 +105,11 @@ const SubmitButton = styled.input`
     color: white;
     background-color: #6D3FE0;
     &:hover {
-        background-color: #6D7DE0;
+      background-color: #6D7DE0;
+      border: 2px solid #6D3FE0;
+    };
+    &:focus {
+      background-color: #6D7DE0;
+      border: 2px solid #6D3FE0;
     }
 `

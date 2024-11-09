@@ -1,11 +1,11 @@
 import { React } from "react";
 import styled from 'styled-components';
 
-export function FormInputComponent({ register, placeholder, errorMessage }) {
+export function FormInputComponent({ register, placeholder, type, errorMessage }) {
   return (
     <InputLabel>
-      Введите {placeholder}
-      <Input {...register} placeholder={placeholder}/>
+      {placeholder}
+      <Input {...register} type={type} placeholder={placeholder}/>
       {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
     </InputLabel>
   );
